@@ -36,6 +36,25 @@ public class ProprietarioJFrame extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        jLabelNumero1 = new javax.swing.JLabel();
+        jLabelOperacao = new javax.swing.JLabel();
+        jLabelNumero2 = new javax.swing.JLabel();
+        jTextFieldNumero1 = new javax.swing.JTextField();
+        jTextFieldNumero2 = new javax.swing.JTextField();
+        jComboBoxOperacao = new javax.swing.JComboBox<>();
+        jToggleButtonLimpar = new javax.swing.JToggleButton();
+        jButtonCalcular = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JSeparator();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jTextFieldNomePaciente = new javax.swing.JTextField();
+        jTextFieldIdadePaciente = new javax.swing.JTextField();
+        jButtonEnviar = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jTextFieldPesoPaciente = new javax.swing.JTextField();
+        jTextFieldAlturaPaciente = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -56,27 +75,122 @@ public class ProprietarioJFrame extends javax.swing.JFrame {
 
         jLabel3.setText("Sobrenome:");
 
+        jLabelNumero1.setText("Número 1");
+
+        jLabelOperacao.setText("Operação");
+
+        jLabelNumero2.setText("Número 2");
+
+        jTextFieldNumero1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldNumero1ActionPerformed(evt);
+            }
+        });
+
+        jComboBoxOperacao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Adição", "Subtração", "Multiplicação", "Divisão", "Maior", "Menor " }));
+        jComboBoxOperacao.setSelectedIndex(-1);
+
+        jToggleButtonLimpar.setText("Limpar");
+
+        jButtonCalcular.setText("Calcular");
+        jButtonCalcular.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCalcularActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("Nome: ");
+
+        jLabel5.setText("Idade:");
+
+        jButtonEnviar.setText("Calcula IMC");
+        jButtonEnviar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEnviarActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setText("Peso:");
+
+        jLabel7.setText("Altura:");
+
+        jTextFieldPesoPaciente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldPesoPacienteActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButtonApresentar)
-                .addGap(69, 69, 69))
             .addGroup(layout.createSequentialGroup()
-                .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextFieldNome, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(47, 47, 47)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextFieldSobrenome, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(77, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(33, 33, 33)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabelNumero2, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(42, 42, 42))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(jTextFieldNumero2, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
+                                            .addComponent(jTextFieldNumero1)
+                                            .addComponent(jLabelNumero1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(38, 38, 38)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(jLabelOperacao, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(jComboBoxOperacao, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                                                .addComponent(jToggleButtonLimpar)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jButtonCalcular)
+                                                .addGap(27, 27, 27))))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(34, 34, 34)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jButtonApresentar)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jTextFieldNome, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(47, 47, 47)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jTextFieldSobrenome, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(jLabel3)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                        .addGap(0, 72, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jSeparator1)
+                            .addComponent(jSeparator2))))
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldNomePaciente, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldPesoPaciente))
+                .addGap(26, 26, 26)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jTextFieldAlturaPaciente, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
+                            .addComponent(jTextFieldIdadePaciente, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -90,15 +204,54 @@ public class ProprietarioJFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextFieldSobrenome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 103, Short.MAX_VALUE)
+                .addGap(14, 14, 14)
                 .addComponent(jButtonApresentar)
-                .addGap(120, 120, 120))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelOperacao)
+                    .addComponent(jLabelNumero1, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldNumero1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBoxOperacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(33, 33, 33)
+                .addComponent(jLabelNumero2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldNumero2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jToggleButtonLimpar)
+                    .addComponent(jButtonCalcular))
+                .addGap(40, 40, 40)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldNomePaciente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldIdadePaciente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(36, 36, 36)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel7))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldPesoPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldAlturaPaciente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonEnviar))
+                .addContainerGap(108, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    // Evento de clique no botão Apresentar
     private void jButtonApresentarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonApresentarActionPerformed
+        // Set para pegar 
+        // Get para definir
         // Pegar o que o usuário preencheu
         String nome = jTextFieldNome.getText();
         String sobrenome = jTextFieldSobrenome.getText();
@@ -110,6 +263,92 @@ public class ProprietarioJFrame extends javax.swing.JFrame {
     private void jTextFieldSobrenomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldSobrenomeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldSobrenomeActionPerformed
+
+    private void jTextFieldNumero1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNumero1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldNumero1ActionPerformed
+
+    private void jButtonCalcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCalcularActionPerformed
+        // INteger.parseInt é utilizado para converter de String para int 
+        // É nescessário pois interações com o usuário sempre vem com String
+        // Para podermos fazer a operação necessitamos converter de texto(String) para int.
+        
+        // Pegar o primeiro número que o usuário digitar
+        int numero1 = Integer.parseInt(jTextFieldNumero1.getText());
+        
+        // Pegar o primeiro número que o usuário digitar
+        int numero2 = Integer.parseInt(jTextFieldNumero2.getText());
+        
+        String operacaoEscolhida = jComboBoxOperacao.getSelectedItem().toString();
+        
+        if(operacaoEscolhida.equals("Adição")){
+            JOptionPane.showMessageDialog(null, "Soma: " + (numero1 + numero2));
+        } else if(operacaoEscolhida.equals("Subtração")){
+            JOptionPane.showMessageDialog(null, "Subtração: " + (numero1 - numero2));
+        } else if(operacaoEscolhida.equals("Multiplicação")){
+            JOptionPane.showMessageDialog(null, "Multiplicação: " + (numero1 * numero2));
+        } else if(operacaoEscolhida.equals("Divisão")){
+            JOptionPane.showMessageDialog(null, "Divisão: " + ((float)numero1 / numero2));
+        } else if(operacaoEscolhida.equals("Maior")){
+            if(numero1 > numero2){
+                JOptionPane.showMessageDialog(null, "O maior número é: " + numero1);
+            } else if(numero2 > numero1){
+                JOptionPane.showMessageDialog(null, "O maior número é: " + numero2);
+            } else {
+                JOptionPane.showMessageDialog(null, "Os dois números são iguais.");
+            }
+        } else if(operacaoEscolhida.equals("Menor")){
+            if(numero1 < numero2){
+                JOptionPane.showMessageDialog(null, "O menor número é: " + numero1);
+            }else if(numero2 < numero1){
+                JOptionPane.showMessageDialog(null, "O menor número é: " + numero2);
+            }else {
+                JOptionPane.showMessageDialog(null, "Os dois número são iguais");
+            }
+        }
+        
+        /* 
+            Exe.1 Calcular o ano do nascimento de um paciente
+            JtextField para o nome do paciente
+            JExidade para a idade do paciente
+            Apresentar a mensagem no seguinte formato: "<Nome do paciente aqui> nasceu no ano de <ano nascimento aqui>"
+        
+            exe.2: Adicionar os campos de peso e altura
+            JTextField para peso
+            JTextField para a altura
+            Jbutton "Calcular IMC, ao clicar no botão pegar os dados dos campos (Lembrar de converter para Double)
+        
+            Fórmula do IMC peso / altura + altura
+            Apresentar a mensagem no seguinte formato: "O <nome do paciente aqui> tem o IMC: <imc aqui>"
+        
+            Exemplo de conversão para Double
+        
+        
+                
+        */
+        
+    }//GEN-LAST:event_jButtonCalcularActionPerformed
+
+    private void jButtonEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEnviarActionPerformed
+        String nome = jTextFieldNomePaciente.getText();
+        int idade = Integer.parseInt(jTextFieldIdadePaciente.getText());
+        int dataNascimento = 0;
+        
+        if(idade > 0) {
+            dataNascimento = 2025 - idade;      
+        }
+        
+        double peso = Double.parseDouble(jTextFieldPesoPaciente.getText());
+        double altura = Double.parseDouble(jTextFieldAlturaPaciente.getText());
+        
+        double IMC = peso / (altura + altura);
+       
+        JOptionPane.showMessageDialog(null, nome + ", nasceu no ano de " + dataNascimento + ", tem o IMC de " + IMC);
+    }//GEN-LAST:event_jButtonEnviarActionPerformed
+
+    private void jTextFieldPesoPacienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldPesoPacienteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldPesoPacienteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -138,10 +377,29 @@ public class ProprietarioJFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonApresentar;
+    private javax.swing.JButton jButtonCalcular;
+    private javax.swing.JButton jButtonEnviar;
+    private javax.swing.JComboBox<String> jComboBoxOperacao;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabelNumero1;
+    private javax.swing.JLabel jLabelNumero2;
+    private javax.swing.JLabel jLabelOperacao;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JTextField jTextFieldAlturaPaciente;
+    private javax.swing.JTextField jTextFieldIdadePaciente;
     private javax.swing.JTextField jTextFieldNome;
+    private javax.swing.JTextField jTextFieldNomePaciente;
+    private javax.swing.JTextField jTextFieldNumero1;
+    private javax.swing.JTextField jTextFieldNumero2;
+    private javax.swing.JTextField jTextFieldPesoPaciente;
     private javax.swing.JTextField jTextFieldSobrenome;
+    private javax.swing.JToggleButton jToggleButtonLimpar;
     // End of variables declaration//GEN-END:variables
 }
