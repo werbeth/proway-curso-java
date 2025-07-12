@@ -10,14 +10,14 @@ import javax.swing.JOptionPane;
  *
  * @author moc
  */
-public class ProprietarioJFrame extends javax.swing.JFrame {
+public class ExemploComponetes extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ProprietarioJFrame.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ExemploComponetes.class.getName());
 
     /**
      * Creates new form ProprietarioJFrame
      */
-    public ProprietarioJFrame() {
+    public ExemploComponetes() {
         initComponents();
     }
 
@@ -372,7 +372,7 @@ public class ProprietarioJFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new ProprietarioJFrame().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new ExemploComponetes().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -234,8 +234,7 @@ public class MediaNotasNewJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonDefender2ActionPerformed
 
     private void jButtonCorrerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCorrerActionPerformed
-        JOptionPane.showMessageDialog(
-                null, "Você fugiu da batalha, você perdeu honra!" + );
+        JOptionPane.showMessageDialog(null, "Você fugiu da batalha, você perdeu honra!");
     }//GEN-LAST:event_jButtonCorrerActionPerformed
 
     /**
