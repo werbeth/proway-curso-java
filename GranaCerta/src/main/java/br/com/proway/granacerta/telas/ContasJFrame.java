@@ -1,22 +1,32 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package br.com.proway.granacerta.telas;
 
-/**
- *
- * @author Pichau
- */
+import br.com.proway.granacerta.bancodados.BancoDadosUtil;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
+import javax.swing.table.DefaultTableModel;
+
+
 public class ContasJFrame extends javax.swing.JFrame {
+    
+    private final DefaultTableModel modeloTabela;
+    private int idEditar;
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ContasJFrame.class.getName());
 
     /**
-     * Creates new form ContasJFrame
+     * Construtor é chamado quando ocorrem um new da classe, exemplo: new ContasJFrames();
      */
     public ContasJFrame() {
         initComponents();
+        
+        modeloTabela = (DefaultTableModel) jTableContas.getModel();
+        idEditar = -1;
+        consultarContas(); 
     }
 
     /**
@@ -28,20 +38,21 @@ public class ContasJFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroupTipo = new javax.swing.ButtonGroup();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextAreaDescricao = new javax.swing.JTextArea();
-        jRadioButton1 = new javax.swing.JRadioButton();
+        jRadioButtonTipoCorrente = new javax.swing.JRadioButton();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTableContas = new javax.swing.JTable();
         jButtonSalvar = new javax.swing.JButton();
         jButtonCancelar = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
-        jRadioButtonPoupanca = new javax.swing.JRadioButton();
+        jRadioButtonTipoPoupanca = new javax.swing.JRadioButton();
         jTextFieldNome = new javax.swing.JTextField();
         jLabelNome = new javax.swing.JLabel();
         jButtonEditar = new javax.swing.JButton();
-        jTextFieldSaldo = new javax.swing.JTextField();
+        jFormattedTextFieldSaldo = new javax.swing.JTextField();
         jButtonApagar = new javax.swing.JButton();
         jLabelTipo = new javax.swing.JLabel();
 
@@ -60,16 +71,17 @@ public class ContasJFrame extends javax.swing.JFrame {
         jTextAreaDescricao.setRows(5);
         jScrollPane2.setViewportView(jTextAreaDescricao);
 
-        jRadioButton1.setText("Corrente");
-        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
+        buttonGroupTipo.add(jRadioButtonTipoCorrente);
+        jRadioButtonTipoCorrente.setText("Corrente");
+        jRadioButtonTipoCorrente.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton1ActionPerformed(evt);
+                jRadioButtonTipoCorrenteActionPerformed(evt);
             }
         });
 
         jLabel3.setText("Saldo: ");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTableContas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -85,8 +97,8 @@ public class ContasJFrame extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(jTable1);
+        jTableContas.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(jTableContas);
 
         jButtonSalvar.setText("Salvar");
         jButtonSalvar.addActionListener(new java.awt.event.ActionListener() {
@@ -99,16 +111,22 @@ public class ContasJFrame extends javax.swing.JFrame {
 
         jLabel4.setText("Descrição:");
 
-        jRadioButtonPoupanca.setText("Poupança");
-        jRadioButtonPoupanca.addActionListener(new java.awt.event.ActionListener() {
+        buttonGroupTipo.add(jRadioButtonTipoPoupanca);
+        jRadioButtonTipoPoupanca.setText("Poupança");
+        jRadioButtonTipoPoupanca.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButtonPoupancaActionPerformed(evt);
+                jRadioButtonTipoPoupancaActionPerformed(evt);
             }
         });
 
         jLabelNome.setText("Nome: ");
 
         jButtonEditar.setText("Editar");
+        jButtonEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEditarActionPerformed(evt);
+            }
+        });
 
         jButtonApagar.setText("Apagar");
         jButtonApagar.addActionListener(new java.awt.event.ActionListener() {
@@ -128,7 +146,7 @@ public class ContasJFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jTextFieldSaldo, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jFormattedTextFieldSaldo, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabelTipo, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -137,9 +155,9 @@ public class ContasJFrame extends javax.swing.JFrame {
                                 .addComponent(jButtonSalvar))
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addComponent(jRadioButton1)
+                                .addComponent(jRadioButtonTipoCorrente)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jRadioButtonPoupanca))
+                                .addComponent(jRadioButtonTipoPoupanca))
                             .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jTextFieldNome))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -165,12 +183,12 @@ public class ContasJFrame extends javax.swing.JFrame {
                                 .addComponent(jLabelTipo)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jRadioButton1)
-                                    .addComponent(jRadioButtonPoupanca))
+                                    .addComponent(jRadioButtonTipoCorrente)
+                                    .addComponent(jRadioButtonTipoPoupanca))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel3)
                                 .addGap(5, 5, 5)
-                                .addComponent(jTextFieldSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jFormattedTextFieldSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -193,20 +211,58 @@ public class ContasJFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton1ActionPerformed
+    private void jRadioButtonTipoCorrenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonTipoCorrenteActionPerformed
+       
+    }//GEN-LAST:event_jRadioButtonTipoCorrenteActionPerformed
 
     private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
-        // TODO add your handling code here:
+        String nome = jTextFieldNome.getText();
+       double saldo = Double.parseDouble(jFormattedTextFieldSaldo.getText().replace(",", "."));
+       String descricao = jTextAreaDescricao.getText();
+       int tipoSelecionado;
+       if(jRadioButtonTipoPoupanca.isSelected()){
+           tipoSelecionado = 0;
+       }else {
+           tipoSelecionado = 1;
+       }
+       
+       String sql = "INSERT INTO contas(nome, tipo, saldo, descricao) VALUES(?,?,?,?)";
+       try(Connection conexao = BancoDadosUtil.getConnection()){
+           PreparedStatement preparadorDeSQL = conexao.prepareStatement(sql);
+           preparadorDeSQL.setString(1, nome);
+           preparadorDeSQL.setInt(2, tipoSelecionado);
+           preparadorDeSQL.setDouble(3, saldo);
+           preparadorDeSQL.setString(4, descricao);
+           preparadorDeSQL.execute();
+           JOptionPane.showMessageDialog(null, "Conta cadastrada com sucesso!");
+           limparCampos();
+           consultarContas();
+           
+       }catch(Exception e){
+           JOptionPane.showMessageDialog(null, "Não foi possivel cadastrar a conta");
+           e.printStackTrace();
+       }
     }//GEN-LAST:event_jButtonSalvarActionPerformed
 
-    private void jRadioButtonPoupancaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonPoupancaActionPerformed
+    private void jRadioButtonTipoPoupancaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonTipoPoupancaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButtonPoupancaActionPerformed
+    }//GEN-LAST:event_jRadioButtonTipoPoupancaActionPerformed
 
     private void jButtonApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonApagarActionPerformed
-        // TODO add your handling code here:
+         String sql = "DELETE FROM contas WHERE ID = ?;";
+         int indiceLinhaSelecionada = jTableContas.getSelectedRow();
+         idEditar = Integer.parseInt(modeloTabela.getValueAt(indiceLinhaSelecionada, 0).toString());
+         
+         try(Connection conexao = BancoDadosUtil.getConnection()){
+             PreparedStatement preparadorSQL = conexao.prepareStatement(sql);
+             preparadorSQL.setInt(1, idEditar);
+             preparadorSQL.execute();
+             JOptionPane.showMessageDialog(null, "Conta apagada com sucesso!");
+             consultarContas();
+         }catch(Exception e){
+             JOptionPane.showMessageDialog(null, "Não foi possivel apagar a conta!");
+         }
+         
     }//GEN-LAST:event_jButtonApagarActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
@@ -221,6 +277,36 @@ public class ContasJFrame extends javax.swing.JFrame {
         
         Home.setVisible(true);
     }//GEN-LAST:event_formWindowClosing
+
+    private void jButtonEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarActionPerformed
+        String sql = "SELECT nome, saldo, tipo, descricao FROM contas WHERE ID = ?;";
+         int indiceLinhaSelecionada = jTableContas.getSelectedRow();
+         idEditar = Integer.parseInt(modeloTabela.getValueAt(indiceLinhaSelecionada, 0).toString());
+         
+         try(Connection conexao = BancoDadosUtil.getConnection()){
+             PreparedStatement preparadorSQL = conexao.prepareStatement(sql);
+             preparadorSQL.setInt(1, idEditar);
+             preparadorSQL.execute();
+             ResultSet registros = preparadorSQL.getResultSet();
+             if(registros.next()){
+                String nome = registros.getString("nome");
+                double saldo = registros.getDouble("saldo");
+                int tipo = registros.getInt("tipo");
+                String descricao = registros.getString("descricao");
+                jTextFieldNome.setText(nome);
+                jFormattedTextFieldSaldo.setText(String.valueOf(saldo).replace(".", ","));
+                jTextAreaDescricao.setText(descricao);
+                if(tipo == 0){
+                    jRadioButtonTipoPoupanca.setSelected(true);
+                } else {
+                    jRadioButtonTipoCorrente.setSelected(true);
+                }
+             }
+             
+         }catch(Exception e){
+             JOptionPane.showMessageDialog(null, "Não foi possivel consultar a conta!");
+         }
+    }//GEN-LAST:event_jButtonEditarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -246,23 +332,53 @@ public class ContasJFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new ContasJFrame().setVisible(true));
     }
+    
+    private void limparCampos(){
+        jTextFieldNome.setText("");
+        jTextAreaDescricao.setText("");
+        buttonGroupTipo.clearSelection();
+        jFormattedTextFieldSaldo.setText("");
+    }
+    
+    private void consultarContas(){
+        try(Connection conexao = BancoDadosUtil.getConnection()){
+            String sql = "SELECT id, nome,tipo, saldo, descricao FROM contas;";
+            Statement executorSQL = conexao.createStatement();
+            executorSQL.execute(sql);
+            ResultSet registros = executorSQL.getResultSet();
+            modeloTabela.setRowCount(0);
+            
+            while(registros.next()){
+                int id = registros.getInt("id");
+                String nome = registros.getString("nome");
+                double saldo = registros.getDouble("saldo");
+                int tipo = registros.getInt("tipo");
+                modeloTabela.addRow(new Object[]{id, nome, tipo, saldo});
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Não foi possivel consultar as contas");
+        }
+            
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup buttonGroupTipo;
     private javax.swing.JButton jButtonApagar;
     private javax.swing.JButton jButtonCancelar;
     private javax.swing.JButton jButtonEditar;
     private javax.swing.JButton jButtonSalvar;
+    private javax.swing.JTextField jFormattedTextFieldSaldo;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabelNome;
     private javax.swing.JLabel jLabelTipo;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButtonPoupanca;
+    private javax.swing.JRadioButton jRadioButtonTipoCorrente;
+    private javax.swing.JRadioButton jRadioButtonTipoPoupanca;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTableContas;
     private javax.swing.JTextArea jTextAreaDescricao;
     private javax.swing.JTextField jTextFieldNome;
-    private javax.swing.JTextField jTextFieldSaldo;
     // End of variables declaration//GEN-END:variables
 }

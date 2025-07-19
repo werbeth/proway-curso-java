@@ -1,0 +1,2 @@
+Para fazer a dependencia com o banco de dados, precisamos usar o Maven para fazer isso.
+    - O maven é um Gerenciador de pacotes do java.

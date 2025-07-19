@@ -9,10 +9,12 @@ package br.com.proway.granacerta.bean;
  * @author Pichau
  */
 public class Conta {
-    public int id;
-    public String tipo;
-    public String nome;
-    public double saldo;
+    private int id;
+    private String tipo;
+    private String nome;
+    private double saldo;
+    
+    public void Conta(){}
     
     public int getId(){
         return id;
@@ -44,6 +46,6 @@ public class Conta {
 
     public void setSaldo(double saldo) {
         this.saldo = saldo;
-    }
+    }   
     
 }

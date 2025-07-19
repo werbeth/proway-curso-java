@@ -1,17 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package br.com.proway.granacerta.exemplos;
 import br.com.proway.granacerta.bean.Proprietario;
 import br.com.proway.granacerta.bean.Conta;
 import javax.swing.JOptionPane;
 
 
-/**
- *
- * @author Pichau
- */
 public class InstanciarObjetos {
     public static void Main(String[] args){
         Proprietario joao = new Proprietario();    
@@ -28,15 +21,15 @@ public class InstanciarObjetos {
             "\nemail: " + joao.getEmail() + 
             "\ncpf: " + joao.getCpf());
     
-        Conta Viacredi = new Conta();
-        Viacredi.tipo = "Salário";
-        Viacredi.tipo = "Poupança";
+        Conta viacredi = new Conta();
+        //Viacredi.getTipo("Poupança");
+        //Viacredi.getTipo("Corrente");
         
         Conta Itau = new Conta();
-        Itau.tipo = "Salário";
-        Itau.tipo = "Poupança";
-        Conta Santander = new Conta();
-        Santander.tipo = "Salário";
-        Santander.tipo = "Poupança";
+        //Itau.tipo = "Salário";
+        //Itau.tipo = "Poupança";
+        //Conta Santander = new Conta();
+        //Santander.tipo = "Salário";
+        //Santander.tipo = "Poupança";
     }
 }
