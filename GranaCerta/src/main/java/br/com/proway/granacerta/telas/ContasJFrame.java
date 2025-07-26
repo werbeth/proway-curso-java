@@ -108,6 +108,11 @@ public class ContasJFrame extends javax.swing.JFrame {
         });
 
         jButtonCancelar.setText("Cancelar");
+        jButtonCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCancelarActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Descrição:");
 
@@ -119,12 +124,24 @@ public class ContasJFrame extends javax.swing.JFrame {
             }
         });
 
+        jTextFieldNome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldNomeActionPerformed(evt);
+            }
+        });
+
         jLabelNome.setText("Nome: ");
 
         jButtonEditar.setText("Editar");
         jButtonEditar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonEditarActionPerformed(evt);
+            }
+        });
+
+        jFormattedTextFieldSaldo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jFormattedTextFieldSaldoActionPerformed(evt);
             }
         });
 
@@ -216,7 +233,7 @@ public class ContasJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButtonTipoCorrenteActionPerformed
 
     private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
-        String nome = jTextFieldNome.getText();
+       String nome = jTextFieldNome.getText();
        double saldo = Double.parseDouble(jFormattedTextFieldSaldo.getText().replace(",", "."));
        String descricao = jTextAreaDescricao.getText();
        int tipoSelecionado;
@@ -226,24 +243,14 @@ public class ContasJFrame extends javax.swing.JFrame {
            tipoSelecionado = 1;
        }
        
-       String sql = "INSERT INTO contas(nome, tipo, saldo, descricao) VALUES(?,?,?,?)";
-       try(Connection conexao = BancoDadosUtil.getConnection()){
-           PreparedStatement preparadorDeSQL = conexao.prepareStatement(sql);
-           preparadorDeSQL.setString(1, nome);
-           preparadorDeSQL.setInt(2, tipoSelecionado);
-           preparadorDeSQL.setDouble(3, saldo);
-           preparadorDeSQL.setString(4, descricao);
-           preparadorDeSQL.execute();
-           JOptionPane.showMessageDialog(null, "Conta cadastrada com sucesso!");
-           limparCampos();
-           consultarContas();
-           
-       }catch(Exception e){
-           JOptionPane.showMessageDialog(null, "Não foi possivel cadastrar a conta");
-           e.printStackTrace();
+       if(idEditar == -1){
+           cadastrarContas(nome, tipoSelecionado, saldo, descricao);
+       } else {
+           editarConta(nome, tipoSelecionado, saldo, descricao);
        }
     }//GEN-LAST:event_jButtonSalvarActionPerformed
 
+    
     private void jRadioButtonTipoPoupancaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonTipoPoupancaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jRadioButtonTipoPoupancaActionPerformed
@@ -308,6 +315,21 @@ public class ContasJFrame extends javax.swing.JFrame {
          }
     }//GEN-LAST:event_jButtonEditarActionPerformed
 
+    private void jTextFieldNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNomeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldNomeActionPerformed
+
+    private void jFormattedTextFieldSaldoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFormattedTextFieldSaldoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jFormattedTextFieldSaldoActionPerformed
+
+    private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
+        var home = new Home2JFrame();
+        home.setVisible(true);
+        
+        dispose();
+    }//GEN-LAST:event_jButtonCancelarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -338,6 +360,7 @@ public class ContasJFrame extends javax.swing.JFrame {
         jTextAreaDescricao.setText("");
         buttonGroupTipo.clearSelection();
         jFormattedTextFieldSaldo.setText("");
+        idEditar = -1;
     }
     
     private void consultarContas(){
@@ -360,6 +383,46 @@ public class ContasJFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Não foi possivel consultar as contas");
         }
             
+    }
+    
+    private void cadastrarContas(String nome, int tipoSelecionado, double saldo, String descricao){
+        String sql = "INSERT INTO contas(nome, tipo, saldo, descricao) VALUES(?,?,?,?)";
+       try(Connection conexao = BancoDadosUtil.getConnection()){
+           PreparedStatement preparadorDeSQL = conexao.prepareStatement(sql);
+           preparadorDeSQL.setString(1, nome);
+           preparadorDeSQL.setInt(2, tipoSelecionado);
+           preparadorDeSQL.setDouble(3, saldo);
+           preparadorDeSQL.setString(4, descricao);
+           preparadorDeSQL.execute();
+           JOptionPane.showMessageDialog(null, "Conta cadastrada com sucesso!");
+           limparCampos();
+           consultarContas();
+           
+       }catch(Exception e){
+           JOptionPane.showMessageDialog(null, "Não foi possivel cadastrar a conta");
+           e.printStackTrace();
+       }
+    }
+    
+    private void editarConta(
+            String nome, int tipoSelecionado, double saldo, String descricao
+    ){
+        String sql = "UPDATE contas SET nome = ?, tipo = ?, saldo = ?, descricao = ? WHERE = ?";
+        try (Connection conexao = BancoDadosUtil.getConnection()){
+            PreparedStatement preparadorSQL = conexao.prepareStatement(sql);
+            preparadorSQL.setString(1, nome);
+            preparadorSQL.setInt(2, tipoSelecionado);
+            preparadorSQL.setDouble(3, saldo);
+            preparadorSQL.setString(4, descricao);
+            preparadorSQL.setInt(5, idEditar);
+            preparadorSQL.execute();
+            limparCampos();
+            consultarContas();
+            JOptionPane.showMessageDialog(null, "Conta alterada com sucesso!");
+        }catch(Exception e){
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Não foi possivel alterar a conta!");
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
