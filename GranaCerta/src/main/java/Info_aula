@@ -1,2 +1,4 @@
 Para fazer a dependencia com o banco de dados, precisamos usar o Maven para fazer isso.
     - O maven é um Gerenciador de pacotes do java.
+
+Para termos acesso ao banco de dados que usamos para o projeto é as informações em Other Sources.src/main/resources > db.properties

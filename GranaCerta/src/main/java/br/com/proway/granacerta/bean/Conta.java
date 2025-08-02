@@ -1,18 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package br.com.proway.granacerta.bean;
 
-/**
- *
- * @author Pichau
- */
 public class Conta {
     private int id;
-    private String tipo;
+    private int tipo;
     private String nome;
     private double saldo;
+    private String descricao;
     
     public void Conta(){}
     
@@ -24,11 +18,11 @@ public class Conta {
         this.id = id;
     }
     
-    public String getTipo(){
+    public int getTipo(){
         return tipo;
     }
     
-    public void setTipo(String tipo){
+    public void setTipo(int tipo){
         this.tipo = tipo;
     }
     
@@ -46,6 +40,14 @@ public class Conta {
 
     public void setSaldo(double saldo) {
         this.saldo = saldo;
-    }   
-    
+    }  
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+   
 }

@@ -2,6 +2,9 @@
 package br.com.proway.granacerta.telas;
 
 import br.com.proway.granacerta.bancodados.BancoDadosUtil;
+import br.com.proway.granacerta.bean.Conta;
+import br.com.proway.granacerta.repositories.ContaRepository;
+import br.com.proway.granacerta.repositories.ContaRepositoryInterface;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -243,8 +246,14 @@ public class ContasJFrame extends javax.swing.JFrame {
            tipoSelecionado = 1;
        }
        
+       Conta conta = new Conta();
+       conta.setTipo(tipoSelecionado);
+       conta.setNome(nome);
+       conta.setSaldo(saldo);
+       conta.setDescricao(descricao);
+       
        if(idEditar == -1){
-           cadastrarContas(nome, tipoSelecionado, saldo, descricao);
+           cadastrarContas(conta);
        } else {
            editarConta(nome, tipoSelecionado, saldo, descricao);
        }
@@ -256,16 +265,16 @@ public class ContasJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jRadioButtonTipoPoupancaActionPerformed
 
     private void jButtonApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonApagarActionPerformed
-         String sql = "DELETE FROM contas WHERE ID = ?;";
          int indiceLinhaSelecionada = jTableContas.getSelectedRow();
          idEditar = Integer.parseInt(modeloTabela.getValueAt(indiceLinhaSelecionada, 0).toString());
          
-         try(Connection conexao = BancoDadosUtil.getConnection()){
-             PreparedStatement preparadorSQL = conexao.prepareStatement(sql);
-             preparadorSQL.setInt(1, idEditar);
-             preparadorSQL.execute();
+         try{
+             ContaRepositoryInterface repositorio = new ContaRepository();
+             repositorio.apagar(idEditar);
+             
              JOptionPane.showMessageDialog(null, "Conta apagada com sucesso!");
              consultarContas();
+             idEditar = -1;
          }catch(Exception e){
              JOptionPane.showMessageDialog(null, "Não foi possivel apagar a conta!");
          }
@@ -385,37 +394,24 @@ public class ContasJFrame extends javax.swing.JFrame {
             
     }
     
-    private void cadastrarContas(String nome, int tipoSelecionado, double saldo, String descricao){
-        String sql = "INSERT INTO contas(nome, tipo, saldo, descricao) VALUES(?,?,?,?)";
-       try(Connection conexao = BancoDadosUtil.getConnection()){
-           PreparedStatement preparadorDeSQL = conexao.prepareStatement(sql);
-           preparadorDeSQL.setString(1, nome);
-           preparadorDeSQL.setInt(2, tipoSelecionado);
-           preparadorDeSQL.setDouble(3, saldo);
-           preparadorDeSQL.setString(4, descricao);
-           preparadorDeSQL.execute();
-           JOptionPane.showMessageDialog(null, "Conta cadastrada com sucesso!");
-           limparCampos();
-           consultarContas();
-           
+    private void cadastrarContas(Conta conta){
+        try{
+            ContaRepositoryInterface repositorio = new ContaRepository();
+            repositorio.adicionar(conta);
+            
+            JOptionPane.showMessageDialog(null, "Conta cadastrada com sucesso!");
+            limparCampos();
+            consultarContas();
+          
        }catch(Exception e){
-           JOptionPane.showMessageDialog(null, "Não foi possivel cadastrar a conta");
-           e.printStackTrace();
+          JOptionPane.showMessageDialog(null, "Conta não cadastrada! Tente novamente."); 
+          e.printStackTrace();
        }
     }
     
-    private void editarConta(
-            String nome, int tipoSelecionado, double saldo, String descricao
-    ){
+    private void editarConta(Conta conta){
         String sql = "UPDATE contas SET nome = ?, tipo = ?, saldo = ?, descricao = ? WHERE = ?";
-        try (Connection conexao = BancoDadosUtil.getConnection()){
-            PreparedStatement preparadorSQL = conexao.prepareStatement(sql);
-            preparadorSQL.setString(1, nome);
-            preparadorSQL.setInt(2, tipoSelecionado);
-            preparadorSQL.setDouble(3, saldo);
-            preparadorSQL.setString(4, descricao);
-            preparadorSQL.setInt(5, idEditar);
-            preparadorSQL.execute();
+        try{
             limparCampos();
             consultarContas();
             JOptionPane.showMessageDialog(null, "Conta alterada com sucesso!");
