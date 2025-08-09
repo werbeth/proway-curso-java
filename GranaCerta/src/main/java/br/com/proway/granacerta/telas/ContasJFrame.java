@@ -1,4 +1,3 @@
-
 package br.com.proway.granacerta.telas;
 
 import br.com.proway.granacerta.bancodados.BancoDadosUtil;
@@ -9,27 +8,28 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
 
-
 public class ContasJFrame extends javax.swing.JFrame {
-    
+
     private final DefaultTableModel modeloTabela;
     private int idEditar;
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ContasJFrame.class.getName());
 
     /**
-     * Construtor é chamado quando ocorrem um new da classe, exemplo: new ContasJFrames();
+     * Construtor é chamado quando ocorrem um new da classe, exemplo: new
+     * ContasJFrames();
      */
     public ContasJFrame() {
         initComponents();
-        
+
         modeloTabela = (DefaultTableModel) jTableContas.getModel();
         idEditar = -1;
-        consultarContas(); 
+        consultarContas();
     }
 
     /**
@@ -232,96 +232,92 @@ public class ContasJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jRadioButtonTipoCorrenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonTipoCorrenteActionPerformed
-       
+
     }//GEN-LAST:event_jRadioButtonTipoCorrenteActionPerformed
 
     private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
-       String nome = jTextFieldNome.getText();
-       double saldo = Double.parseDouble(jFormattedTextFieldSaldo.getText().replace(",", "."));
-       String descricao = jTextAreaDescricao.getText();
-       int tipoSelecionado;
-       if(jRadioButtonTipoPoupanca.isSelected()){
-           tipoSelecionado = 0;
-       }else {
-           tipoSelecionado = 1;
-       }
-       
-       Conta conta = new Conta();
-       conta.setTipo(tipoSelecionado);
-       conta.setNome(nome);
-       conta.setSaldo(saldo);
-       conta.setDescricao(descricao);
-       
-       if(idEditar == -1){
-           cadastrarContas(conta);
-       } else {
-           editarConta(nome, tipoSelecionado, saldo, descricao);
-       }
+        String nome = jTextFieldNome.getText();
+        double saldo = Double.parseDouble(jFormattedTextFieldSaldo.getText().replace(",", "."));
+        String descricao = jTextAreaDescricao.getText();
+        int tipoSelecionado;
+        
+        if (jRadioButtonTipoPoupanca.isSelected()) {
+            tipoSelecionado = 0;
+        } else {
+            tipoSelecionado = 1;
+        }
+
+        Conta conta = new Conta();
+        conta.setTipo(tipoSelecionado);
+        conta.setNome(nome);
+        conta.setSaldo(saldo);
+        conta.setDescricao(descricao);
+
+        if (idEditar == -1) {
+            cadastrarContas(conta);
+        } else {
+            conta.setId(idEditar);
+            editarConta(conta);
+        }
     }//GEN-LAST:event_jButtonSalvarActionPerformed
 
-    
+
     private void jRadioButtonTipoPoupancaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonTipoPoupancaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jRadioButtonTipoPoupancaActionPerformed
 
     private void jButtonApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonApagarActionPerformed
-         int indiceLinhaSelecionada = jTableContas.getSelectedRow();
-         idEditar = Integer.parseInt(modeloTabela.getValueAt(indiceLinhaSelecionada, 0).toString());
-         
-         try{
-             ContaRepositoryInterface repositorio = new ContaRepository();
-             repositorio.apagar(idEditar);
-             
-             JOptionPane.showMessageDialog(null, "Conta apagada com sucesso!");
-             consultarContas();
-             idEditar = -1;
-         }catch(Exception e){
-             JOptionPane.showMessageDialog(null, "Não foi possivel apagar a conta!");
-         }
-         
+        int indiceLinhaSelecionada = jTableContas.getSelectedRow();
+        idEditar = Integer.parseInt(modeloTabela.getValueAt(indiceLinhaSelecionada, 0).toString());
+
+        try {
+            ContaRepositoryInterface repositorio = new ContaRepository();
+            repositorio.apagar(idEditar);
+
+            JOptionPane.showMessageDialog(null, "Conta apagada com sucesso!");
+            consultarContas();
+            idEditar = -1;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Não foi possivel apagar a conta!");
+            e.printStackTrace();
+        }
+
     }//GEN-LAST:event_jButtonApagarActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         var Home = new Home2JFrame();
-        
+
         Home.setVisible(true);
-       
+
     }//GEN-LAST:event_formWindowClosed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         var Home = new Home2JFrame();
-        
+
         Home.setVisible(true);
     }//GEN-LAST:event_formWindowClosing
 
     private void jButtonEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarActionPerformed
-        String sql = "SELECT nome, saldo, tipo, descricao FROM contas WHERE ID = ?;";
-         int indiceLinhaSelecionada = jTableContas.getSelectedRow();
-         idEditar = Integer.parseInt(modeloTabela.getValueAt(indiceLinhaSelecionada, 0).toString());
-         
-         try(Connection conexao = BancoDadosUtil.getConnection()){
-             PreparedStatement preparadorSQL = conexao.prepareStatement(sql);
-             preparadorSQL.setInt(1, idEditar);
-             preparadorSQL.execute();
-             ResultSet registros = preparadorSQL.getResultSet();
-             if(registros.next()){
-                String nome = registros.getString("nome");
-                double saldo = registros.getDouble("saldo");
-                int tipo = registros.getInt("tipo");
-                String descricao = registros.getString("descricao");
-                jTextFieldNome.setText(nome);
-                jFormattedTextFieldSaldo.setText(String.valueOf(saldo).replace(".", ","));
-                jTextAreaDescricao.setText(descricao);
-                if(tipo == 0){
-                    jRadioButtonTipoPoupanca.setSelected(true);
-                } else {
-                    jRadioButtonTipoCorrente.setSelected(true);
-                }
-             }
-             
-         }catch(Exception e){
-             JOptionPane.showMessageDialog(null, "Não foi possivel consultar a conta!");
-         }
+
+        int indiceLinhaSelecionada = jTableContas.getSelectedRow();
+        idEditar = Integer.parseInt(modeloTabela.getValueAt(indiceLinhaSelecionada, 0).toString());
+
+        try {
+            ContaRepositoryInterface repository = new ContaRepository();
+            Conta conta = repository.obterPorId(idEditar);
+
+            jTextFieldNome.setText(conta.getNome());
+            jFormattedTextFieldSaldo.setText(String.valueOf(conta.getSaldo()).replace(".", ","));
+            jTextAreaDescricao.setText(conta.getDescricao());
+            if (conta.getTipo() == 0) {
+                jRadioButtonTipoPoupanca.setSelected(true);
+            } else {
+                jRadioButtonTipoCorrente.setSelected(true);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Não foi possivel consultar a conta!");
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_jButtonEditarActionPerformed
 
     private void jTextFieldNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNomeActionPerformed
@@ -335,7 +331,7 @@ public class ContasJFrame extends javax.swing.JFrame {
     private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
         var home = new Home2JFrame();
         home.setVisible(true);
-        
+
         dispose();
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
@@ -363,59 +359,57 @@ public class ContasJFrame extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new ContasJFrame().setVisible(true));
     }
-    
-    private void limparCampos(){
+
+    private void limparCampos() {
         jTextFieldNome.setText("");
         jTextAreaDescricao.setText("");
         buttonGroupTipo.clearSelection();
         jFormattedTextFieldSaldo.setText("");
         idEditar = -1;
     }
-    
-    private void consultarContas(){
-        try(Connection conexao = BancoDadosUtil.getConnection()){
-            String sql = "SELECT id, nome,tipo, saldo, descricao FROM contas;";
-            Statement executorSQL = conexao.createStatement();
-            executorSQL.execute(sql);
-            ResultSet registros = executorSQL.getResultSet();
-            modeloTabela.setRowCount(0);
+
+    private void consultarContas() {
+        modeloTabela.setRowCount(0);
+        try{
+            ContaRepositoryInterface repositorio = new ContaRepository();
+            List<Conta> contas = repositorio.obterTodos();
             
-            while(registros.next()){
-                int id = registros.getInt("id");
-                String nome = registros.getString("nome");
-                double saldo = registros.getDouble("saldo");
-                int tipo = registros.getInt("tipo");
-                modeloTabela.addRow(new Object[]{id, nome, tipo, saldo});
+            for(Conta conta : contas){
+                modeloTabela.addRow(new Object[]{
+                    conta.getId(), conta.getNome(), conta.getSaldo(), conta.getTipo()
+                });
             }
-        }catch(Exception e){
+            
+        } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Não foi possivel consultar as contas");
         }
-            
     }
-    
-    private void cadastrarContas(Conta conta){
-        try{
+
+    private void cadastrarContas(Conta conta) {
+        try {
             ContaRepositoryInterface repositorio = new ContaRepository();
             repositorio.adicionar(conta);
-            
+
             JOptionPane.showMessageDialog(null, "Conta cadastrada com sucesso!");
             limparCampos();
             consultarContas();
-          
-       }catch(Exception e){
-          JOptionPane.showMessageDialog(null, "Conta não cadastrada! Tente novamente."); 
-          e.printStackTrace();
-       }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Conta não cadastrada! Tente novamente.");
+            e.printStackTrace();
+        }
     }
-    
-    private void editarConta(Conta conta){
-        String sql = "UPDATE contas SET nome = ?, tipo = ?, saldo = ?, descricao = ? WHERE = ?";
-        try{
+
+    private void editarConta(Conta conta) {
+        try {
+            ContaRepositoryInterface repositorio = new ContaRepository();
+            repositorio.editar(conta);
+
             limparCampos();
             consultarContas();
             JOptionPane.showMessageDialog(null, "Conta alterada com sucesso!");
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Não foi possivel alterar a conta!");
         }

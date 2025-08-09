@@ -5,11 +5,15 @@
 package br.com.proway.granacerta.telas;
 
 import br.com.proway.granacerta.bancodados.BancoDadosUtil;
+import br.com.proway.granacerta.bean.Cliente;
+import br.com.proway.granacerta.repositories.ClienteRepository;
+import br.com.proway.granacerta.repositories.ClienteRepositoryInterface;
 import javax.swing.JOptionPane;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -62,6 +66,11 @@ public class ClientesJFrame extends javax.swing.JFrame {
         jLabelNome.setText("Nome: ");
 
         jTextFieldNome.setMinimumSize(new java.awt.Dimension(60, 22));
+        jTextFieldNome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldNomeActionPerformed(evt);
+            }
+        });
 
         jLabelCNPJ.setText("CNPJ:");
 
@@ -179,10 +188,14 @@ public class ClientesJFrame extends javax.swing.JFrame {
         String nome = jTextFieldNome.getText();
         String cnpj = jTextFieldCNPJ.getText();
         
+        Cliente cliente = new Cliente();
+        cliente.setNome(nome);
+        cliente.setCnpj(cnpj);
+        
         if(idEditar == -1 ){
-            cadastrarClientes(nome, cnpj);
+            cadastrarClientes(cliente);
         } else {
-            editarCliente(nome, cnpj);
+            editarCliente(cliente);
         }
     }//GEN-LAST:event_jButtonSalvarActionPerformed
 
@@ -194,22 +207,17 @@ public class ClientesJFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
     private void jButtonEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarActionPerformed
-        String sql = "SELECT nome, cnpj FROM cliente WHERE ID = ?;";
+
         int indiceLinhaSelecionada = jTableClientes.getSelectedRow();
         idEditar = Integer.parseInt(modeloTabela.getValueAt(indiceLinhaSelecionada, 0).toString());
         
-        try(Connection conexao = BancoDadosUtil.getConnection()){
-            PreparedStatement preparadorSQL = conexao.prepareStatement(sql);
-            preparadorSQL.setInt(1, idEditar);
-            preparadorSQL.execute();
-            ResultSet registros = preparadorSQL.getResultSet();
+        try{
+            ClienteRepositoryInterface repository = new ClienteRepository();
+            Cliente cliente = repository.obterPorId(idEditar);
             
-            if(registros.next()){
-                String nome = registros.getString("nome");
-                String cnpj = registros.getString("cnpj");
-                jTextFieldNome.setText(nome);
-                jTextFieldCNPJ.setText(cnpj);
-            }
+            jTextFieldNome.setText(cliente.getNome());
+            jTextFieldCNPJ.setText(cliente.getCnpj());
+           
         }catch(Exception e){
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Erro ao consultar o cliente");
@@ -218,7 +226,6 @@ public class ClientesJFrame extends javax.swing.JFrame {
 
     private void jButtonApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonApagarActionPerformed
 
-        String sql = "DELETE FROM cliente WHERE id = ?;";
         int indiceLinhaSelecionada = jTableClientes.getSelectedRow();
         idEditar = Integer.parseInt(modeloTabela.getValueAt(indiceLinhaSelecionada, 0).toString());
  
@@ -231,13 +238,13 @@ public class ClientesJFrame extends javax.swing.JFrame {
             );
             
             if(resposta == JOptionPane.YES_NO_OPTION){
-                try(Connection conexao = BancoDadosUtil.getConnection()){
-                    PreparedStatement preparadorSQL = conexao.prepareStatement(sql);
-                    preparadorSQL.setInt(1, idEditar);
-                    preparadorSQL.execute();
+                try{
+                    ClienteRepositoryInterface repository = new ClienteRepository();
+                    repository.apagar(idEditar);
+                    
                     JOptionPane.showMessageDialog(null, "Cliente apagado com sucesso!");
                     consultarClientes();
-                    
+                    idEditar = -1;
                 }catch(Exception error){
                     error.printStackTrace();
                     JOptionPane.showMessageDialog(null, "Erro ao deletar o cliente");
@@ -247,19 +254,21 @@ public class ClientesJFrame extends javax.swing.JFrame {
             }
     }//GEN-LAST:event_jButtonApagarActionPerformed
 
+    private void jTextFieldNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNomeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldNomeActionPerformed
+
     private void limparCampos(){
         jTextFieldNome.setText("");
         jTextFieldCNPJ.setText("");
         idEditar = -1;
     } 
     
-    private void cadastrarClientes(String nome, String cnpj){
-        String sql = "INSERT INTO cliente(nome, cnpj) VALUES(?,?)";
-        try(Connection conexao = BancoDadosUtil.getConnection()){
-            PreparedStatement preparadorSQL = conexao.prepareStatement(sql);
-            preparadorSQL.setString(1, nome);
-            preparadorSQL.setString(2, cnpj);
-            preparadorSQL.execute();
+    private void cadastrarClientes(Cliente cliente){
+        try{
+            ClienteRepositoryInterface repository = new ClienteRepository();
+            repository.adicionar(cliente);
+                    
             JOptionPane.showMessageDialog(null, "Cliente Cadastrado com sucesso!");
             limparCampos();
             consultarClientes();
@@ -271,42 +280,36 @@ public class ClientesJFrame extends javax.swing.JFrame {
     }
     
     private void consultarClientes(){
-        try(Connection conexao = BancoDadosUtil.getConnection()){
-            String sql = "SELECT id, nome, cnpj FROM cliente;";
-            Statement executorSQL = conexao.createStatement();
-            executorSQL.execute(sql);
-            ResultSet registros = executorSQL.getResultSet();
-            modeloTabela.setRowCount(0);
-            
-            while(registros.next()){
-                int id = registros.getInt("id");
-                String nome = registros.getString("nome");
-                String cnpj = registros.getString("cnpj");
-                modeloTabela.addRow(new Object[] {id, nome, cnpj});
-            }
+        modeloTabela.setRowCount(0);
+        try{
+            ClienteRepositoryInterface repository = new ClienteRepository();
+            List<Cliente> clientes = repository.obterTodos();
+
+               for (Cliente cliente : clientes){
+                   modeloTabela.addRow(new Object[] {
+                       cliente.getId(),cliente.getNome(), cliente.getCnpj()
+                   });
+                }   
         }catch(Exception e){
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Erro ao consultar clientes");
         }
-    }
+    }   
     
-    private void editarCliente(String nome, String cnpj){
-        String sql = "UPDATE cliente SET nome = ?, cnpj = ? WHERE id = ?;";
-        try(Connection conexao = BancoDadosUtil.getConnection()){
-            PreparedStatement preparadorSQL = conexao.prepareStatement(sql);
-            preparadorSQL.setString(1, nome);
-            preparadorSQL.setString(2, cnpj);
-            preparadorSQL.setInt(3, idEditar);
-            preparadorSQL.execute();
+    private void editarCliente(Cliente cliente){
+        try{
+            ClienteRepositoryInterface repository = new ClienteRepository();
+            repository.editar(cliente);
+            
             limparCampos();
             consultarClientes();
-            
             JOptionPane.showMessageDialog(null, "Cliente editado com sucesso!");
         }catch(Exception e){
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Erro ao editar cliente!");
         }
     }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonApagar;

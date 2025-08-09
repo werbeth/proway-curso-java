@@ -9,6 +9,7 @@ public interface ContaRepositoryInterface {
     
     void adicionar(Conta conta) throws SQLException;
     List<Conta> obterTodos() throws SQLException;
+    Conta obterPorId(int id) throws SQLException;
     void editar(Conta conta) throws SQLException;
     void apagar(int id) throws SQLException;
     
