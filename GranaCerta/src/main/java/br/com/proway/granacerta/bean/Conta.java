@@ -49,5 +49,10 @@ public class Conta {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
+    
+    @Override
+    public String toString(){
+        return nome;
+    }
    
 }

@@ -75,6 +75,11 @@ public class ClientesJFrame extends javax.swing.JFrame {
         jLabelCNPJ.setText("CNPJ:");
 
         jTextFieldCNPJ.setMinimumSize(new java.awt.Dimension(60, 22));
+        jTextFieldCNPJ.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldCNPJActionPerformed(evt);
+            }
+        });
 
         jButtonSalvar.setBackground(new java.awt.Color(0, 204, 102));
         jButtonSalvar.setForeground(new java.awt.Color(255, 255, 255));
@@ -257,6 +262,10 @@ public class ClientesJFrame extends javax.swing.JFrame {
     private void jTextFieldNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNomeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldNomeActionPerformed
+
+    private void jTextFieldCNPJActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldCNPJActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldCNPJActionPerformed
 
     private void limparCampos(){
         jTextFieldNome.setText("");

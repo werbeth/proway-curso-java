@@ -4,17 +4,28 @@
  */
 package br.com.proway.granacerta.telas;
 
-/**
- *
- * @author 61238
- */
+import br.com.proway.granacerta.bean.Cliente;
+import br.com.proway.granacerta.bean.Conta;
+import br.com.proway.granacerta.repositories.ClienteRepository;
+import br.com.proway.granacerta.repositories.ClienteRepositoryInterface;
+import br.com.proway.granacerta.repositories.ContaRepository;
+import br.com.proway.granacerta.repositories.ContaRepositoryInterface;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+
 public class ContaPagarCadastroJFrame extends javax.swing.JFrame {
 
-    /**
-     * Creates new form ContaPagarCadastroJFrame
-     */
+    private final ContaRepositoryInterface contaRepositorio;
+    private final ClienteRepositoryInterface clienteRepositorio;
+    
     public ContaPagarCadastroJFrame() {
         initComponents();
+        
+        contaRepositorio = new ContaRepository();
+        preencherContasComboBox();
+        
+        clienteRepositorio = new ClienteRepository();
+        preencherClienteComboBox();
     }
 
     /**
@@ -26,21 +37,149 @@ public class ContaPagarCadastroJFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabelNome = new javax.swing.JLabel();
+        jTextFieldNome = new javax.swing.JTextField();
+        jLabelConta = new javax.swing.JLabel();
+        jComboBoxConta = new javax.swing.JComboBox<>();
+        jLabelCliente = new javax.swing.JLabel();
+        jComboBoxCliente = new javax.swing.JComboBox<>();
+        jLabelValor = new javax.swing.JLabel();
+        jLabelDataPrevista = new javax.swing.JLabel();
+        jTextFieldDataPrevista = new javax.swing.JTextField();
+        jTextFieldValor = new javax.swing.JTextField();
+        jButtonSalvar = new javax.swing.JButton();
+        jButtonCancelar = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabelNome.setText("Nome");
+
+        jTextFieldNome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldNomeActionPerformed(evt);
+            }
+        });
+
+        jLabelConta.setText("Conta");
+
+        jComboBoxConta.setSelectedItem(jComboBoxConta);
+        jComboBoxConta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxContaActionPerformed(evt);
+            }
+        });
+
+        jLabelCliente.setText("Cliente");
+
+        jComboBoxCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxClienteActionPerformed(evt);
+            }
+        });
+
+        jLabelValor.setText("Valor");
+
+        jLabelDataPrevista.setText("Data Prevista");
+
+        jTextFieldValor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldValorActionPerformed(evt);
+            }
+        });
+
+        jButtonSalvar.setBackground(new java.awt.Color(0, 153, 255));
+        jButtonSalvar.setForeground(new java.awt.Color(255, 255, 255));
+        jButtonSalvar.setText("Salvar");
+
+        jButtonCancelar.setText("Cancelar");
+        jButtonCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCancelarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabelNome, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldNome)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jComboBoxConta, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabelValor, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextFieldValor, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelConta, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButtonCancelar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonSalvar))
+                            .addComponent(jLabelDataPrevista, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboBoxCliente, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jTextFieldDataPrevista, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabelNome)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTextFieldNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelConta)
+                    .addComponent(jLabelCliente))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jComboBoxConta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBoxCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelValor)
+                    .addComponent(jLabelDataPrevista))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldDataPrevista, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldValor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonSalvar)
+                    .addComponent(jButtonCancelar))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jComboBoxClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxClienteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxClienteActionPerformed
+
+    private void jTextFieldNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNomeActionPerformed
+        
+    }//GEN-LAST:event_jTextFieldNomeActionPerformed
+
+    private void jComboBoxContaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxContaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxContaActionPerformed
+
+    private void jTextFieldValorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldValorActionPerformed
+        
+    }//GEN-LAST:event_jTextFieldValorActionPerformed
+
+    private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
+        var home = new Home2JFrame();
+        home.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jButtonCancelarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -78,5 +217,41 @@ public class ContaPagarCadastroJFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonCancelar;
+    private javax.swing.JButton jButtonSalvar;
+    private javax.swing.JComboBox<Cliente> jComboBoxCliente;
+    private javax.swing.JComboBox<Conta> jComboBoxConta;
+    private javax.swing.JLabel jLabelCliente;
+    private javax.swing.JLabel jLabelConta;
+    private javax.swing.JLabel jLabelDataPrevista;
+    private javax.swing.JLabel jLabelNome;
+    private javax.swing.JLabel jLabelValor;
+    private javax.swing.JTextField jTextFieldDataPrevista;
+    private javax.swing.JTextField jTextFieldNome;
+    private javax.swing.JTextField jTextFieldValor;
     // End of variables declaration//GEN-END:variables
+
+    private void preencherContasComboBox() {
+        try{
+            var contas = contaRepositorio.obterTodos();
+            
+            var modeloComboBox = (DefaultComboBoxModel<Conta>) jComboBoxConta.getModel();
+            modeloComboBox.removeAllElements();
+            modeloComboBox.addAll(contas);
+        }   catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Não foi possivel carregar as contas" + e);
+        }
+    }
+
+    private void preencherClienteComboBox() {
+        try{
+            var clientes = clienteRepositorio.obterTodos();
+            
+            var clienteComboBox = (DefaultComboBoxModel<Cliente>) jComboBoxCliente.getModel();
+            clienteComboBox.removeAllElements();
+            clienteComboBox.addAll(clientes);
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Não foi possivel carregar o cliente" + e);
+        }    
+    }
 }

@@ -13,9 +13,7 @@ public class Cliente {
     public void setId(int id) {
         this.id = id;
     }
-    
-    
-
+  
     public String getNome() {
         return nome;
     }
@@ -31,7 +29,9 @@ public class Cliente {
     public void setCnpj(String cnpj) {
         this.cnpj = cnpj;
     }
-    
-    
-    
+
+    @Override
+    public String toString() {
+        return nome;
+    }   
 }
