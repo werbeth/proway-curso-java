@@ -4,21 +4,32 @@
  */
 package br.com.proway.granacerta.telas;
 
+import Enums.ContaStatusEnum;
+import Enums.ContaTipoEnum;
 import br.com.proway.granacerta.bean.Cliente;
 import br.com.proway.granacerta.bean.Conta;
+import br.com.proway.granacerta.bean.ContaPagarReceber;
 import br.com.proway.granacerta.repositories.ClienteRepository;
 import br.com.proway.granacerta.repositories.ClienteRepositoryInterface;
+import br.com.proway.granacerta.repositories.ContaPagarReceberRepository;
 import br.com.proway.granacerta.repositories.ContaRepository;
 import br.com.proway.granacerta.repositories.ContaRepositoryInterface;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 
 public class ContaPagarCadastroJFrame extends javax.swing.JFrame {
 
     private final ContaRepositoryInterface contaRepositorio;
     private final ClienteRepositoryInterface clienteRepositorio;
+    private final ContaTipoEnum contaTipo;
     
-    public ContaPagarCadastroJFrame() {
+    public ContaPagarCadastroJFrame(ContaTipoEnum contaTipo) {
         initComponents();
         
         contaRepositorio = new ContaRepository();
@@ -26,6 +37,8 @@ public class ContaPagarCadastroJFrame extends javax.swing.JFrame {
         
         clienteRepositorio = new ClienteRepository();
         preencherClienteComboBox();
+        
+        this.contaTipo = contaTipo;
     }
 
     /**
@@ -81,6 +94,12 @@ public class ContaPagarCadastroJFrame extends javax.swing.JFrame {
 
         jLabelDataPrevista.setText("Data Prevista");
 
+        jTextFieldDataPrevista.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldDataPrevistaActionPerformed(evt);
+            }
+        });
+
         jTextFieldValor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldValorActionPerformed(evt);
@@ -90,6 +109,11 @@ public class ContaPagarCadastroJFrame extends javax.swing.JFrame {
         jButtonSalvar.setBackground(new java.awt.Color(0, 153, 255));
         jButtonSalvar.setForeground(new java.awt.Color(255, 255, 255));
         jButtonSalvar.setText("Salvar");
+        jButtonSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSalvarActionPerformed(evt);
+            }
+        });
 
         jButtonCancelar.setText("Cancelar");
         jButtonCancelar.addActionListener(new java.awt.event.ActionListener() {
@@ -181,40 +205,65 @@ public class ContaPagarCadastroJFrame extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ContaPagarCadastroJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ContaPagarCadastroJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ContaPagarCadastroJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ContaPagarCadastroJFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
+        if(jComboBoxConta.getSelectedIndex() == -1){
+            JOptionPane.showMessageDialog(this, "Selecione uma conta");
         }
-        //</editor-fold>
+        
+        if(jComboBoxCliente.getSelectedIndex() == -1){
+            JOptionPane.showMessageDialog(this, "Selecione um cliente");
+        }
+        
+        String nome = jTextFieldNome.getText().trim();
+        double valor = Double.parseDouble(jTextFieldValor.getText());
+        String data = jTextFieldDataPrevista.getText();
+        Cliente cliente = (Cliente) jComboBoxCliente.getSelectedItem();
+        Conta conta = (Conta) jComboBoxConta.getSelectedItem();
+        
+        ContaPagarReceber contaPagarReceber = new ContaPagarReceber();
+        contaPagarReceber.setNome(nome);
+        contaPagarReceber.setValor(valor);
+        contaPagarReceber.setCliente(cliente);
+        contaPagarReceber.setConta(conta);
+        contaPagarReceber.setTipo(contaTipo);
+        // contaPagarReceber.setDataPrevista(LocalDate.of(2025, Month.MARCH, 10));
+        contaPagarReceber.setStatus(ContaStatusEnum.PENDENTE);
+        
+        var formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                .withLocale(new Locale.Builder()
+                .setLanguage("pt")
+                .setRegion("BR")
+                .build());
+        contaPagarReceber.setDataPrevista(LocalDate.parse(data, formatador));
+        try {
+            var repository = new ContaPagarReceberRepository();
+            repository.adicionar(contaPagarReceber);
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Conta cadastrada com sucesso!",
+                    "Aviso", JOptionPane.INFORMATION_MESSAGE    
+            );
+        }catch(SQLException e){
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Não foi possivel cadastrar a conta Pagar Receber, pois ocorreu um erro na persistência",
+                    "Aviso", JOptionPane.ERROR_MESSAGE
+            );
+        } catch(Exception e){
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Não foi possivel cadastrar a conta Pagar Receber, erro desconhecido, entre em contato com o suporte",
+                    "Aviso",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }//GEN-LAST:event_jButtonSalvarActionPerformed
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ContaPagarCadastroJFrame().setVisible(true);
-            }
-        });
-    }
+    private void jTextFieldDataPrevistaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldDataPrevistaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldDataPrevistaActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancelar;

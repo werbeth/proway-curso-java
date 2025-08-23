@@ -4,6 +4,8 @@
  */
 package br.com.proway.granacerta.telas;
 
+import Enums.ContaTipoEnum;
+
 /**
  *
  * @author 61238
@@ -85,14 +87,14 @@ public class ContaSelecaoTipoJFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonPagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPagarActionPerformed
-        var form = new ContaPagarCadastroJFrame();
+        var form = new ContaPagarCadastroJFrame(ContaTipoEnum.SAIDA);
         form.setTitle("Cadastro a pagar");
         form.setVisible(true);
         dispose();
     }//GEN-LAST:event_jButtonPagarActionPerformed
 
     private void jButtonReceberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonReceberActionPerformed
-        var form= new ContaPagarCadastroJFrame();
+        var form= new ContaPagarCadastroJFrame(ContaTipoEnum.ENTRADA);
         form.setTitle("Cadastro conta receber");
         form.setVisible(true);
         dispose();

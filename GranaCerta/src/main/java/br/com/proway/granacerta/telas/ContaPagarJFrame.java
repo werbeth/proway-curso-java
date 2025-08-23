@@ -4,14 +4,21 @@
  */
 package br.com.proway.granacerta.telas;
 
+import Enums.ContaStatusEnum;
 import br.com.proway.granacerta.bean.Cliente;
 import br.com.proway.granacerta.bean.Conta;
+import br.com.proway.granacerta.modelos.ContaPagarReceberFiltro;
 import br.com.proway.granacerta.repositories.ClienteRepository;
 import br.com.proway.granacerta.repositories.ClienteRepositoryInterface;
+import br.com.proway.granacerta.repositories.ContaPagarReceberRepository;
+import br.com.proway.granacerta.repositories.ContaPagarReceberRepositoryInterface;
 import br.com.proway.granacerta.repositories.ContaRepository;
 import br.com.proway.granacerta.repositories.ContaRepositoryInterface;
+import java.sql.SQLException;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButton;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -21,6 +28,9 @@ public class ContaPagarJFrame extends javax.swing.JFrame {
 
     private final ContaRepositoryInterface contaRepositorio;
     private final ClienteRepositoryInterface clienteRepositorio;
+    private ContaPagarReceberRepositoryInterface repositorio;
+    private DefaultTableModel modeloTabela;
+    private ContaPagarReceberFiltro filtros;
     
     public ContaPagarJFrame() {
         initComponents();
@@ -30,6 +40,12 @@ public class ContaPagarJFrame extends javax.swing.JFrame {
         
         clienteRepositorio = new ClienteRepository();
         preencherClienteComboBox();
+        
+        repositorio = new ContaPagarReceberRepository();
+        modeloTabela = (DefaultTableModel) jTableContas.getModel();
+        filtros = new ContaPagarReceberFiltro();
+        preencherContasPagarReceber();
+        
     }
 
     /**
@@ -41,6 +57,7 @@ public class ContaPagarJFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jComboBoxConta = new javax.swing.JComboBox<>();
@@ -51,7 +68,7 @@ public class ContaPagarJFrame extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jRadioButtonStatusCancelado = new javax.swing.JRadioButton();
         jRadioButtonStatusPendente = new javax.swing.JRadioButton();
-        jRadioButtonStatusRecebido = new javax.swing.JRadioButton();
+        jRadioButtonStatusAmbos = new javax.swing.JRadioButton();
         jLabel8 = new javax.swing.JLabel();
         jTextFieldNome = new javax.swing.JTextField();
         jButtonLimpar = new javax.swing.JButton();
@@ -75,6 +92,7 @@ public class ContaPagarJFrame extends javax.swing.JFrame {
         jButtonPaginaProxima = new javax.swing.JButton();
         jButtonPaginaUltima = new javax.swing.JButton();
         jLabelPaginaRegistros = new javax.swing.JLabel();
+        jRadioButtonStatusRecebido1 = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -101,13 +119,28 @@ public class ContaPagarJFrame extends javax.swing.JFrame {
 
         jLabel7.setText("Status");
 
+        buttonGroup1.add(jRadioButtonStatusCancelado);
         jRadioButtonStatusCancelado.setText("Cancelado");
 
+        buttonGroup1.add(jRadioButtonStatusPendente);
         jRadioButtonStatusPendente.setText("Pendente");
 
-        jRadioButtonStatusRecebido.setText("Recebido");
+        buttonGroup1.add(jRadioButtonStatusAmbos);
+        jRadioButtonStatusAmbos.setSelected(true);
+        jRadioButtonStatusAmbos.setText("Ambos");
+        jRadioButtonStatusAmbos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButtonStatusAmbosActionPerformed(evt);
+            }
+        });
 
         jLabel8.setText("Nome");
+
+        jTextFieldNome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldNomeActionPerformed(evt);
+            }
+        });
 
         jButtonLimpar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/clear-filter.png"))); // NOI18N
         jButtonLimpar.setText("Limpar");
@@ -171,16 +204,30 @@ public class ContaPagarJFrame extends javax.swing.JFrame {
 
         jTableContas.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Código", "Cliente", "Nome", "Tipo", "Status", "Conta", "Valor"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(jTableContas);
+        if (jTableContas.getColumnModel().getColumnCount() > 0) {
+            jTableContas.getColumnModel().getColumn(0).setResizable(false);
+            jTableContas.getColumnModel().getColumn(1).setResizable(false);
+            jTableContas.getColumnModel().getColumn(2).setResizable(false);
+            jTableContas.getColumnModel().getColumn(3).setResizable(false);
+            jTableContas.getColumnModel().getColumn(4).setResizable(false);
+            jTableContas.getColumnModel().getColumn(5).setResizable(false);
+            jTableContas.getColumnModel().getColumn(6).setResizable(false);
+        }
 
         jButtonPaginaPrimeira.setText("<<");
         jButtonPaginaPrimeira.addActionListener(new java.awt.event.ActionListener() {
@@ -207,6 +254,14 @@ public class ContaPagarJFrame extends javax.swing.JFrame {
 
         jLabelPaginaRegistros.setText("Página 1 de 30");
 
+        buttonGroup1.add(jRadioButtonStatusRecebido1);
+        jRadioButtonStatusRecebido1.setText("Recebido");
+        jRadioButtonStatusRecebido1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButtonStatusRecebido1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -216,13 +271,13 @@ public class ContaPagarJFrame extends javax.swing.JFrame {
                 .addComponent(jButtonPaginaPrimeira, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonPaginaAnterior, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(12, 12, 12)
                 .addComponent(jButtonPaginaProxima, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButtonPaginaUltima, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabelPaginaRegistros, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(266, Short.MAX_VALUE))
+                .addContainerGap(283, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -233,12 +288,6 @@ public class ContaPagarJFrame extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jRadioButtonStatusCancelado, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jRadioButtonStatusPendente, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jRadioButtonStatusRecebido, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(jComboBoxConta, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -246,7 +295,16 @@ public class ContaPagarJFrame extends javax.swing.JFrame {
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jComboBoxCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                            .addComponent(jRadioButtonStatusRecebido1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(jRadioButtonStatusAmbos, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(jRadioButtonStatusCancelado, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(jRadioButtonStatusPendente, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
@@ -307,12 +365,15 @@ public class ContaPagarJFrame extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jRadioButtonStatusCancelado)
                             .addComponent(jRadioButtonStatusPendente)
-                            .addComponent(jRadioButtonStatusRecebido)
                             .addComponent(jTextFieldNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButtonLimpar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButtonPesquisar))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jButtonLimpar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jButtonPesquisar))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jRadioButtonStatusRecebido1)
+                                .addComponent(jRadioButtonStatusAmbos)))
                         .addGap(25, 25, 25))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -340,15 +401,16 @@ public class ContaPagarJFrame extends javax.swing.JFrame {
                         .addComponent(jButtonRegistrar)
                         .addComponent(jButtonEditar)))
                 .addGap(74, 74, 74)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonPaginaAnterior, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButtonPaginaUltima)
-                        .addComponent(jButtonPaginaProxima)
                         .addComponent(jButtonPaginaPrimeira)
-                        .addComponent(jLabelPaginaRegistros)))
+                        .addComponent(jLabelPaginaRegistros))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButtonPaginaAnterior, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButtonPaginaProxima)))
                 .addContainerGap())
         );
 
@@ -394,6 +456,18 @@ public class ContaPagarJFrame extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jComboBoxContaActionPerformed
 
+    private void jTextFieldNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNomeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldNomeActionPerformed
+
+    private void jRadioButtonStatusAmbosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonStatusAmbosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jRadioButtonStatusAmbosActionPerformed
+
+    private void jRadioButtonStatusRecebido1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonStatusRecebido1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jRadioButtonStatusRecebido1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -430,6 +504,7 @@ public class ContaPagarJFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButtonApagar;
     private javax.swing.JButton jButtonEditar;
     private javax.swing.JButton jButtonLimpar;
@@ -456,9 +531,10 @@ public class ContaPagarJFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabelPaginaRegistros;
+    private javax.swing.JRadioButton jRadioButtonStatusAmbos;
     private javax.swing.JRadioButton jRadioButtonStatusCancelado;
     private javax.swing.JRadioButton jRadioButtonStatusPendente;
-    private javax.swing.JRadioButton jRadioButtonStatusRecebido;
+    private javax.swing.JRadioButton jRadioButtonStatusRecebido1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
@@ -489,4 +565,62 @@ public class ContaPagarJFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Não foi possivel carregar o cliente" + e);
         } 
     }
+    
+    
+    private void preencherContasPagarReceber() {
+        modeloTabela.setRowCount(0);
+        try{
+            var contasPagarReceber = repositorio.obterTodos();
+            for(var contaPagarReceber : contasPagarReceber) {
+                modeloTabela.addRow(new Object[]{
+                    contaPagarReceber.getId(),
+                    contaPagarReceber.getCliente().getNome(),
+                    contaPagarReceber.getNome(),
+                    contaPagarReceber.getTipo().getTitulo(),
+                    contaPagarReceber.getStatus().getTitulo(),
+                    contaPagarReceber.getConta().getNome(),
+                    contaPagarReceber.getValor()
+                });
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Não foi possivel carregar as contas pagar/receber");
+        }
+    }
+    
+    private void xFiltros(){
+        var pesquisaNome = jTextFieldNome.getText();
+        var ordemColuna = jComboBoxColuna.getSelectedItem();
+        var onderOrdem = jComboBoxOrdem.getSelectedItem();
+        var quantidade = Integer.parseInt(
+                jComboBoxQuantidadeRegistros.getSelectedItem().toString()
+        );
+        var tipo = jComboBoxTipo.getSelectedItem().toString();
+        
+         if(jRadioButtonStatusPendente.isSelected()){
+            filtros.setStatus(ContaStatusEnum.PENDENTE);
+        } else if(jRadioButtonStatusCancelado.isSelected()){
+            filtros.setStatus(ContaStatusEnum.CANCELADO);
+        } else if(jRadioButtonStatusRecebido1.isSelected()){
+            filtros.setStatus(ContaStatusEnum.REALIZADO);
+        } else {
+            filtros.setStatus(null);
+        }
+         
+        if(jComboBoxCliente.getSelectedIndex() > -1){
+            filtros.setCliente((Cliente) jComboBoxCliente.getSelectedItem());
+        }else {
+            filtros.setCliente(null);
+        }
+        
+        if(jComboBoxCliente.getSelectedIndex() > -1){
+            filtros.setConta((Conta) jComboBoxConta.getSelectedItem());
+        } else {
+            filtros.setConta(null);
+        }
+        
+        System.out.println(filtros);
+    }
 }
+
+

@@ -3,12 +3,15 @@ package Enums;
 
 public enum ContaTipoEnum {
     
-    ENTRADA(0), SAIDA(1);
+    ENTRADA(0, "Entrada"), 
+    SAIDA(1, "Saída");
     
     private final int code;
+    private final String titulo;
     
-    private ContaTipoEnum(int code){
+    private ContaTipoEnum(int code, String titulo){
         this.code = code;
+        this.titulo = titulo;
     }
     
     public static ContaTipoEnum fromCode(int code){
@@ -25,5 +28,8 @@ public enum ContaTipoEnum {
         return code;
     }
         
+    public String getTitulo(){
+        return titulo;
+    }
     
 }
