@@ -63,7 +63,7 @@ public class ContaPagarCadastroJFrame extends javax.swing.JFrame {
         jButtonSalvar = new javax.swing.JButton();
         jButtonCancelar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabelNome.setText("Nome");
 
@@ -215,7 +215,7 @@ public class ContaPagarCadastroJFrame extends javax.swing.JFrame {
         }
         
         String nome = jTextFieldNome.getText().trim();
-        double valor = Double.parseDouble(jTextFieldValor.getText());
+        double valor = Double.parseDouble(jTextFieldValor.getText().replace(".", "").replace(",", "."));
         String data = jTextFieldDataPrevista.getText();
         Cliente cliente = (Cliente) jComboBoxCliente.getSelectedItem();
         Conta conta = (Conta) jComboBoxConta.getSelectedItem();
@@ -237,23 +237,26 @@ public class ContaPagarCadastroJFrame extends javax.swing.JFrame {
         contaPagarReceber.setDataPrevista(LocalDate.parse(data, formatador));
         try {
             var repository = new ContaPagarReceberRepository();
-            repository.adicionar(contaPagarReceber);
+            repository.adicionar(contaPagarReceber);          
             JOptionPane.showMessageDialog(
                     this,
-                    "Conta cadastrada com sucesso!",
+                    "Conta " + contaTipo.getTitulo() + " cadastrada com sucesso.",
                     "Aviso", JOptionPane.INFORMATION_MESSAGE    
             );
+            var lista = new ContaPagarJFrame();
+            lista.setVisible(true);
+            dispose();
         }catch(SQLException e){
             e.printStackTrace();
             JOptionPane.showMessageDialog(
                     this,
-                    "Não foi possivel cadastrar a conta Pagar Receber, pois ocorreu um erro na persistência",
+                    "Não foi possivel cadastrar a conta " + contaTipo.getTitulo() + ", pois ocorreu um erro na persistência",
                     "Aviso", JOptionPane.ERROR_MESSAGE
             );
         } catch(Exception e){
             JOptionPane.showMessageDialog(
                     this,
-                    "Não foi possivel cadastrar a conta Pagar Receber, erro desconhecido, entre em contato com o suporte",
+                    "Não foi possivel cadastrar a conta " + contaTipo.getTitulo() + ", erro desconhecido, entre em contato com o suporte",
                     "Aviso",
                     JOptionPane.ERROR_MESSAGE
             );
